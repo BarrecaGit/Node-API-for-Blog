@@ -1,0 +1,39 @@
+{
+  "name": "blog-express-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "/src/main.ts",
+  "scripts": {
+    "start": "node dist/main.js",
+    "dev": "nodemon src/main.ts",
+    "build": "tsc -p ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BarrecaGit/Blog-Express-Backend.git"
+  },
+  "author": "Barreca",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BarrecaGit/Blog-Express-Backend/issues"
+  },
+  "homepage": "git+https://github.com/BarrecaGit/Blog-Express-Backend.git",
+  "dependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/cors": "^2.8.12",
+    "@types/jsonwebtoken": "^8.5.9",
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "express-handlebars": "^6.0.6",
+    "g": "^2.0.1",
+    "jsonwebtoken": "^8.5.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.14",
+    "@types/node": "^18.8.3",
+    "nodemon": "^2.0.20",
+    "typescript": "^4.8.4"
+  }
+}

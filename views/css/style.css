@@ -1,0 +1,24 @@
+
+li{
+    list-style: none;
+}
+
+#GetUsersCard{
+    background-color: rgb(204, 238, 255);
+}
+
+#PostUsersCard{
+    background-color: rgb(194, 240, 194);
+}
+
+#GetUsersByIdCard{
+    background-color: rgb(204, 238, 255);
+}
+
+#PatchUsersCard{
+    background-color: rgb(230, 255, 236);
+}
+
+#DeleteUsersCard{
+    background-color: rgb(255, 179, 179);
+}

@@ -1,0 +1,427 @@
+<!--form button reveal form or options-->
+        
+        
+          <div class="btn-group">
+            <a href="#GetUsers" class="btn btn-small btn-outline-primary mb-3 ">Get/Users</a>
+            <a href="#PostUsers" class="btn btn-small btn-outline-primary mb-3">Post/Users</a>
+            <a href="#GetUsersById" class="btn btn-small btn-outline-primary mb-3">Get/Users/{userId}</a>
+            <a href="#PatchUsers" class="btn btn-small btn-outline-primary mb-3">Patch/Users/{userId}</a>
+            <a href="#DeleteUsers" class="btn btn-small btn-outline-primary mb-3">Delete/Users/{userId}</a>
+          </div>
+
+
+            
+
+          
+          <div class="p-5 card mb-5 bg-dark text-white">
+            <h3>Blog CRUD Help Page</h3>
+            <p>This is a basic user API it allows you create, retrieve update and delete users from an in memmory array written in node / express</p>
+          </div>
+
+          <!--
+            CARD
+            Description section
+            Parameters section
+            Responses section
+              show good code response -> Description of code
+                  Media Type: application/json
+              show bad code response -> Description of code
+            Example section showing example schema
+          -->
+
+          <!--GET/Users-->
+          <div id="GetUsers">
+            <div id="GetUsersCard" class="card p-3 mb-5">
+              <h4>GET/Users</h4>
+              <p>Returns a list of users that are currently in the in memmory array</p>
+              <hr>
+              <h5>Parameters</h5>
+              <p>No parameters needed</p>
+              <hr>
+              <h5>Responses</h5>
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Media type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>200</th>
+                    <td>Array of Users</td>
+                    <td>application/json</td>
+                  </tr>
+                  <tr>
+                    <th>Example schema</th>
+                    <td>
+                      <code>
+                        [
+                          {
+                            "userId": "string",
+                            "firstName": "string",
+                            "lastName": "string",
+                            "emailAddress": "string"
+                          }
+                        ]
+                      </code>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!--POST/Users-->
+          <div id="PostUsers">
+            <div id="PostUsersCard" class="card p-3 mb-5">
+              <h4>POST/Users</h4>
+              <p>Creates a new user</p>
+              <hr>
+
+
+              <h5>Parameters</h5>
+              <p>No parameters needed</p>
+              <hr>
+
+              <h5>Request body (required) (raw json)</h5>
+              <code>
+                {
+                  "userId": "string",
+                  "firstName": "string",
+                  "lastName": "string",
+                  "emailAddress": "string",
+                  "password": "string"
+                }
+              </code> 
+              <hr>
+
+
+              <h5>Responses</h5>
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Media type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>201</th>
+                    <td>"User Created"</td>
+                    <td>application/json</td>
+                  </tr>
+                  <tr>
+                    <th>Example schema</th>
+                    <td>
+                      <code>
+                        {
+                          "userId": "string",
+                          "firstName": "string",
+                          "lastName": "string",
+                          "emailAddress": "string"
+                        }
+                      </code>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <th>406</th>
+                    <td>"All properties are required in the user object (userId, firstName, lastName, emailAddress, password)"</td>
+                    <td>application/json</td>
+                  </tr>
+                  <tr>
+                    <th>Example schema</th>
+                    <td>
+                      <code>
+                        {
+                          "message": "All properties are required for a new user userId,firstName,lastName,emailAddress, password",
+                          "status": 406
+                        }
+                      </code>
+                    </td>
+                  </tr>
+
+
+                  <tr>
+                    <th>409</th>
+                    <td>"Conflict userId already in use"</td>
+                    <td>application/json</td>
+                  </tr>
+                  <tr>
+                    <th>Example schema</th>
+                    <td>
+                      <code>
+                        {
+                          "message": "Userid already in use",
+                          "status": 409
+                        }
+                      </code>
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+
+          <!--GET/Users/{userId}-->
+          <div id="GetUsersById">
+            <div id="GetUsersByIdCard" class="card p-3 mb-5">
+              <h4>GET/Users/{userId}</h4>
+              <p>Returns the specified user object</p>
+              <hr>
+
+
+              <h5>Parameters</h5>
+              <p>userId:string (required)</p>
+              <hr>
+
+              
+
+              <h5>Responses</h5>
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Media type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>200</th>
+                    <td>Returns the User object with the matching userId</td>
+                    <td>application/json</td>
+                  </tr>
+                  <tr>
+                    <th>Example schema</th>
+                    <td>
+                      <code>
+                        {
+                          "userId": "string",
+                          "firstName": "string",
+                          "lastName": "string",
+                          "emailAddress": "string"
+                        }
+                      </code>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <th>404</th>
+                    <td>"User not found"</td>
+                    <td>application/json</td>
+                  </tr>
+                  <tr>
+                    <th>Example schema</th>
+                    <td>
+                      <code>
+                        {
+                          "message": "User not found",
+                          "status": 404
+                        }
+                      </code>
+                    </td>
+                  </tr>
+
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+
+          <!--PATCH/Users/{userId}-->
+          <div id="PatchUsers">
+            <div id="PatchUsersCard" class="card p-3 mb-5">
+              <h4>PATCH/Users/{userId}</h4>
+              <p>Updates an existing user</p>
+              <hr>
+
+
+              <h5>Parameters</h5>
+              <p>userId:string (required)</p>
+              <hr>
+
+              <h5>Request body (required) (raw json)</h5>
+              <p>Any properties of the user object that should be updated.</p>
+              <code>
+                {
+                  "userId": "string",
+                  "firstName": "string",
+                  "lastName": "string",
+                  "emailAddress": "string",
+                  "password": "string"
+                }
+              </code> 
+              <hr>
+
+              <h5>Responses</h5>
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Media type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>200</th>
+                    <td>	
+                      User Updated
+                    </td>
+                    <td>application/json</td>
+                  </tr>
+                  <tr>
+                    <th>Example schema</th>
+                    <td>
+                      <code>
+                        {
+                          "userId": "string",
+                          "firstName": "string",
+                          "lastName": "string",
+                          "emailAddress": "string"
+                        }
+                      </code>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <th>404</th>
+                    <td>"User not found"</td>
+                    <td>application/json</td>
+                  </tr>
+                  <tr>
+                    <th>Example schema</th>
+                    <td>
+                      <code>
+                        {
+                          "message": "User not found",
+                          "status": 404
+                        }
+                      </code>
+                    </td>
+                  </tr>
+
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+
+          <!--DELETE/Users/{userId}-->
+          <div id="DeleteUsers">
+            <div id="DeleteUsersCard" class="card p-3 mb-5">
+              <h4>DELETE/Users/{userId}</h4>
+              <p>Deletes by userId passed in</p>
+              <hr>
+
+
+              <h5>Parameters</h5>
+              <p>userId:string (required)</p>
+              <hr>
+
+
+              <h5>Responses</h5>
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Media type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>204</th>
+                    <td>	
+                      User deleted
+                    </td>
+                    <td>application/json</td>
+                  </tr>
+
+                  <tr>
+                    <th>404</th>
+                    <td>"User not found"</td>
+                    <td>application/json</td>
+                  </tr>
+                  <tr>
+                    <th>Example schema</th>
+                    <td>
+                      <code>
+                        {
+                          "message": "User not found",
+                          "status": 404
+                        }
+                      </code>
+                    </td>
+                  </tr>
+
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+
+
+          <!--Schemas collapsible card-->
+          <div id="schemas">
+            <div class="card p-3 mb-5">
+              <h4>Schemas</h4>
+              <div class="card bg-secondary p-3">
+                <code>
+                  <span class="h6 text-white">ResponseUser</span>
+                    <p class="text-white">{
+                      userId	string
+                      firstName	string
+                      lastName	string
+                      emailAddress	string
+                      }</p>
+                </code>
+              </div> 
+                <div class="bg-secondary p-3">
+                  <code>
+                    <span class="h6 text-white">User</span>
+                      <p class="text-white">{
+                        userId	string
+                        firstName	string
+                        lastName	string
+                        emailAddress	string
+                        }</p>
+                  </code>
+              
+            </div>
+          </div>
+
+
+<form action="/Users" method="POST" class="mb-4 p-5">
+    <h4>Modify Users</h4>
+    <div class="form-group">
+        <label for="userId">User Id</label>
+        <input type="text" name="userId" class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input type="text" name="firstName" class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input type="text" name="lastName" class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="emailAddress">Email Address</label>
+        <input type="email" name="emailAddress" class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" name="password" class="form-control">
+    </div>
+    <input type="submit" value="Add User" class="mt-2 btn btn-success btn-block">
+</form>

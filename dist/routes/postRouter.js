@@ -28,10 +28,18 @@ postRouter.get('/:postId', (req, res, next) => {
 });
 //Get post by userId
 postRouter.get('/:userId', (req, res, next) => {
+    console.log(req.header);
     let userId = req.params.userId;
-    let foundPost = postArray.find(post => post.userId == userId);
-    if (foundPost) {
-        res.status(200).send(foundPost);
+    // let foundPost = postArray.find(post => post.userId == userId);
+    let foundPostArray = [];
+    for (let i = 0; i < postArray.length; i++) {
+        let foundPost = postArray.find(post => post.userId == userId);
+        if (foundPost) {
+            foundPostArray.push(foundPost);
+        }
+    }
+    if (foundPostArray) {
+        res.status(200).send(foundPostArray);
     }
     else {
         res.status(404).send({ message: `No posts found by user ${userId}` });

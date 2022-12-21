@@ -1,0 +1,683 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "Blog backend CRUD documentation",
+      "description": "This is a basic user API it allows you create, retrieve update and delete users from an in memmory array written in node / express",
+      "contact": {
+        "email": "n01470339@unf.edu"
+      },
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:3000/"
+      }
+    ],
+    "tags":[
+        "name" , "Users", "Posts"
+    ],
+    "paths": {
+        "/Posts":{
+            "get": {
+                "tags":["Posts"],
+                "description":"Returns all posts",
+                "responses":{
+                    "200":{
+                        "description": "Returns a list of posts that are currently in the in memmory array",
+                        "content":{
+                            "application/json": {
+                              "schema": {
+                                "type": "array",
+                                "items": {
+                                  "$ref": "#/components/schemas/PostResponse"
+                                }
+                              }
+                            }
+                          }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                {
+                    "bearerAuth": []
+                }
+                ],
+                "tags":["Posts"],
+                "description":"Creates a new blog post",
+                "requestBody":{
+                    "content": {
+                        "application/json": {
+                          "schema": {
+                            "$ref": "#/components/schemas/PostRequest"
+                          }
+                        }
+                      },
+                      "required": true
+                },
+                "responses":{
+                    "201":{
+                        "description": "Post Created",
+                        "content":{
+                            "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/PostResponse"
+                              }
+                            }
+                          }
+                    },
+                    "401":{
+                        "description":"Unauthorized - Access token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                              "schema": {
+                                "$ref": "#/components/schemas/ErrorResponse"
+                              }
+                            }
+                          }
+                    },
+                    "406":{
+                        "description":"Not Acceptable: Bad data in the entity IE: Missing Title or Content",
+                        "content": {
+                            "application/json": {
+                              "schema": {
+                                "$ref": "#/components/schemas/ErrorResponse"
+                              }
+                            }
+                          }
+                    }
+                }
+            }
+        },
+        "/Posts/{postId}": {
+            "get":{
+                "tags":["Posts"],
+                "description": "Returns a post",
+                "parameters":[
+                    {
+                      "name": "postId",
+                      "in": "path",
+                      "description": "postId of the post object you are trying to find",
+                      "required": true,
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                      "description": "Post",
+                      "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PostResponse"
+                            }
+                          }
+                      }
+                    },
+                    "401": {
+                        "description": "Post not Found",
+                        "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ErrorResponse"
+                              }
+                            }
+                        }
+                      }
+                  }
+            },
+            "patch":{
+                "security": [
+                {
+                    "bearerAuth": []
+                }
+                ],
+                "tags":["Posts"],
+                "description": "Updates a specific post",
+                "parameters":[
+                    {
+                      "name": "postId",
+                      "in": "path",
+                      "description": "postId of the post object you are trying to update",
+                      "required": true,
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "$ref": "#/components/schemas/PostRequest"
+                        }
+                      }
+                    },
+                    "required": true
+                  },
+                "responses": {
+                    "200": {
+                      "description": "Post Updated",
+                      "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PostResponse"
+                            }
+                          }
+                      }
+                    },
+                    "401":{
+                        "description":"Unauthorized - Access token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                              "schema": {
+                                "$ref": "#/components/schemas/ErrorResponse"
+                              }
+                            }
+                          }
+                    },
+                    "404":{
+                        "description":"Post not found",
+                        "content": {
+                            "application/json": {
+                              "schema": {
+                                "$ref": "#/components/schemas/ErrorResponse"
+                              }
+                            }
+                          }
+                    }
+                }
+            },
+            "delete":{
+                "security": [
+                {
+                    "bearerAuth": []
+                }
+                ],
+                "tags":["Posts"],
+                "description": "Deletes a Post and any related Post Categories",
+                "parameters":[
+                    {
+                      "name": "postId",
+                      "in": "path",
+                      "description": "postId of the post object you are trying to delete",
+                      "required": true,
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                      "description": "Post deleted"
+                    },
+                    "401":{
+                        "description":"Unauthorized - Access token is missing or invalid",
+                        "content": {
+                            "application/json": {
+                              "schema": {
+                                "$ref": "#/components/schemas/ErrorResponse"
+                              }
+                            }
+                          }
+                    },
+                    "404":{
+                        "description":"Post not found",
+                        "content": {
+                            "application/json": {
+                              "schema": {
+                                "$ref": "#/components/schemas/ErrorResponse"
+                              }
+                            }
+                          }
+                    }
+                }
+            }
+        },
+        "/Posts/{userId}": {
+            "get":{
+                "tags":["Posts"],
+                "description": "Returns a post",
+                "parameters":[
+                    {
+                      "name": "userId",
+                      "in": "path",
+                      "description": "userId on the post object you are trying to find",
+                      "required": true,
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                      "description": "Array of available posts for the given user",
+                      "content": {
+                        "application/json": {
+                            "type":"array",
+                            "schema": {
+                                "$ref": "#/components/schemas/PostResponse"
+                            }
+                          }
+                      }
+                    },
+                    "404": {
+                        "description": "Invalid user / no posts found",
+                        "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ErrorResponse"
+                              }
+                            }
+                        }
+                      }
+                  }
+            }
+        },
+      "/Users": {
+        "get": {
+        "security": [
+        {
+            "bearerAuth": []
+        }
+        ],
+        "tags":["Users"],
+        "description": "Returns a list of users that are currently in the in memmory array",
+          "responses": {
+            "200": {
+              "description": "Array of Users",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ResponseUser"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+            "tags":["Users"],
+          "description": "Creates a new user",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "User Created",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ResponseUser"
+                  }
+                }
+              }
+            },
+            "406": {
+              "description": "All properties are required in the user object (userId, firstName, lastName, emailAddress, password)",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "default": "All properties are required for a new user userId,firstName,lastName,emailAddress, password"
+                      },
+                      "status": {
+                        "type": "integer",
+                        "default": 406
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict userId already in use",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "default": "Userid already in use"
+                      },
+                      "status": {
+                        "type": "integer",
+                        "default": 409
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/Users/Login/{us}/{pwd}": {
+        "get": {
+            "tags":["Users"],
+            "description":"Authenticates a user and returns a valid JSON Web Token",
+            "parameters": [
+                {
+                  "name": "us",
+                  "in": "path",
+                  "description": "userId of the user object you are trying to authenticate",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                    "name": "pwd",
+                    "in": "path",
+                    "description": "password of the user object you are trying to authenticate",
+                    "required": true,
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+              ],
+              "responses":{
+                "200":{
+                    "description":"User Authenticated",
+                    "content": {
+                        "application/json": {
+                          "schema": {
+                            "$ref": "#/components/schemas/AuthenticationResponse"
+                          }
+                        }
+                      }
+                },
+                "401":{
+                    "description":"Bad username or password",
+                    "content": {
+                        "application/json": {
+                          "schema": {
+                            "$ref": "#/components/schemas/ErrorResponse"
+                          }
+                        }
+                      }
+                }
+              }
+        }
+      },
+      "/Users/{userId}": {
+        "get": {
+            "security": [
+            {
+                "bearerAuth": []
+            }
+            ],
+          "tags":["Users"],
+          "description": "Returns the specified user object",
+          "parameters": [
+            {
+              "name": "userId",
+              "in": "path",
+              "description": "userId of the user object you are trying to retrieve",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Returns the User object with the matching userId",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ResponseUser"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "User not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "default": "User not found"
+                      },
+                      "status": {
+                        "type": "integer",
+                        "default": 404
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "patch": {
+            "security": [
+            {
+                "bearerAuth": []
+            }
+            ],
+            "tags":["Users"],
+          "description": "Updates an existing user",
+          "parameters": [
+            {
+              "name": "userId",
+              "in": "path",
+              "description": "userId of the user object you are trying to retrieve",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "Any properties of the user object that should be updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "User Updated",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ResponseUser"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "User not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "default": "User not found"
+                      },
+                      "status": {
+                        "type": "integer",
+                        "default": 404
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+            "security": [
+            {
+                "bearerAuth": []
+            }
+            ],
+            "tags":["Users"],
+          "description": "Returns the specified user object",
+          "parameters": [
+            {
+              "name": "userId",
+              "in": "path",
+              "description": "userId of the user object you are trying to delete",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "User deleted"
+            },
+            "404": {
+              "description": "User not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "default": "User not found"
+                      },
+                      "status": {
+                        "type": "integer",
+                        "default": 404
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "securitySchemes":{
+        "bearerAuth": {
+            "type": "http",
+            "scheme": "bearer"
+          }
+      },
+      "schemas": {
+        "ResponseUser": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "string"
+            },
+            "firstName": {
+              "type": "string"
+            },
+            "lastName": {
+              "type": "string"
+            },
+            "emailAddress": {
+              "type": "string"
+            }
+          }
+        },
+        "User": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "string"
+            },
+            "firstName": {
+              "type": "string"
+            },
+            "lastName": {
+              "type": "string"
+            },
+            "emailAddress": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            }
+          }
+        },
+        "AuthenticationResponse": {
+          "properties": {
+            "token": {
+              "type": "string"
+            }
+          }
+        },
+        "PostResponse": {
+          "properties": {
+           "postId": {
+              "type": "integer"
+            },
+            "createdDate": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "content": {
+              "type": "string"
+            },
+            "userId": {
+              "type": "string"
+            },
+            "headerImage": {
+              "type": "string"
+            },
+            "lastUpdated": {
+              "type": "string"
+            }
+          }
+        },
+        "PostRequest": {
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "content": {
+              "type": "string"
+            },
+            "headerImage": {
+              "type": "string"
+            }
+          }
+        },
+        "ErrorResponse": {
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }

@@ -7,6 +7,7 @@ exports.postRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const userRouter_1 = require("../routes/userRouter");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const userModel_1 = require("../model/userModel");
 let postRouter = express_1.default.Router();
 exports.postRouter = postRouter;
 let postArray = [];
@@ -48,8 +49,6 @@ postRouter.get('/:userId', (req, res, next) => {
 // Post a post
 // needs auth
 postRouter.post('/', (req, res, next) => {
-    console.log(req.body);
-    // needs a title and content
     if (!req.body.title || !req.body.content) {
         return res.send({ msg: 'Please add a title and content' });
     }
@@ -77,15 +76,24 @@ function getPostId() {
 // patch post by Id
 // needs auth
 postRouter.patch('/:postId', (req, res, next) => {
+    // if the current users userId doesn't match the userId passed in, can't continue
+    let token = req.headers['authorization'].split(' ')[1];
+    let currentUser = userModel_1.User.GetCurrentUser(token); // returns User
+    // find the post by postId and compare the userId
     const foundPost = postArray.some(p => p.postId === parseInt(req.params.postId));
     if (foundPost) {
         const updatedPost = req.body;
         postArray.forEach(post => {
             if (post.postId == parseInt(req.params.postId)) {
-                post.content = updatedPost.content ? updatedPost.content : post.content;
-                post.headerImage = updatedPost.headerImage ? updatedPost.headerImage : post.headerImage;
-                post.lastUpdated = new Date();
-                return res.status(200).json({ postArray });
+                if (currentUser.userId === post.userId) {
+                    post.content = updatedPost.content ? updatedPost.content : post.content;
+                    post.headerImage = updatedPost.headerImage ? updatedPost.headerImage : post.headerImage;
+                    post.lastUpdated = new Date();
+                    return res.status(200).json({ postArray });
+                }
+                else {
+                    return res.status(401).send({ message: 'Un-Authorized' });
+                }
             }
         });
     }
@@ -96,10 +104,18 @@ postRouter.patch('/:postId', (req, res, next) => {
 // Delete post by postId
 // needs auth
 postRouter.delete('/:postId', (req, res, next) => {
-    const foundPost = postArray.some(p => p.postId === parseInt(req.params.postId));
-    if (foundPost) {
-        postArray = postArray.filter(j => j.postId !== parseInt(req.params.postId));
-        return res.status(204);
+    let token = req.headers['authorization'].split(' ')[1];
+    let currentUser = userModel_1.User.GetCurrentUser(token);
+    const found = postArray.some(p => p.postId === parseInt(req.params.postId));
+    const foundPost = postArray.find(j => j.postId === parseInt(req.params.postId));
+    if (found) {
+        if (currentUser.userId === foundPost?.userId) {
+            postArray = postArray.filter(j => j.postId !== parseInt(req.params.postId));
+            return res.status(204).json({ postArray });
+        }
+        else {
+            return res.status(401).send({ message: 'Un-Authorized' });
+        }
     }
     else {
         return res.status(404).json({ message: `Not Found: ${req.params.postId}` });

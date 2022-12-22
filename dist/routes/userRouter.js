@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.JWTKey = exports.userRouter = void 0;
 const express_1 = __importDefault(require("express"));
+const userModel_1 = require("../model/userModel");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 let userRouter = express_1.default.Router();
@@ -37,6 +38,7 @@ userRouter.get('/Login/:us/:pwd', (req, res, next) => {
                         emailAddress: person?.emailAddress
                     }
                 }, JWTKey);
+                userModel_1.User.GetCurrentUser(token);
                 res.send({ token: token });
             }
             else {
@@ -51,7 +53,7 @@ userRouter.get('/Login/:us/:pwd', (req, res, next) => {
 // Get member by userId
 // needs auth
 userRouter.get('/:userId', (req, res, next) => {
-    let userId = req.params.userId;
+    let userId = req.params.userId; // userId to find
     let foundUser = userArray.find(user => user.userId == userId.toString());
     if (foundUser) {
         var copyOffoundUser = {
@@ -69,12 +71,19 @@ userRouter.get('/:userId', (req, res, next) => {
 // Delete member by userId
 // needs auth
 userRouter.delete('/:userId', (req, res, next) => {
+    let token = req.headers['authorization'].split(' ')[1];
+    let currentUser = userModel_1.User.GetCurrentUser(token); // returns User
     const foundUser = userArray.some(user => user.userId === req.params.userId);
     if (foundUser) {
-        userArray = userArray.filter(user => user.userId !== req.params.userId);
-        res.status(204).json({
-            msg: `user deleted ${req.params.userId}`
-        });
+        if (currentUser.userId === req.params.userId) {
+            userArray = userArray.filter(user => user.userId !== req.params.userId);
+            res.status(204).json({
+                msg: `user deleted ${req.params.userId}`
+            });
+        }
+        else {
+            return res.status(401).send({ message: 'Un-Authorized' });
+        }
     }
     else {
         res.status(404).json({ message: `User not found. userId not removed: ${req.params.userId}` });
@@ -122,7 +131,7 @@ userRouter.post('/', (req, res, next) => {
             bcrypt_1.default.hash(newUser.password, salt, function (err, hash) {
                 newUser.password = hash;
                 userArray.push(newUser);
-                console.log("2nd attempt: ", userArray);
+                // console.log("2nd attempt: ",userArray)
             });
         });
         // respond with copy of the newUser object without the password
@@ -170,26 +179,31 @@ function noPwdUser(user) {
 // patch member by Id
 // needs auth
 userRouter.patch('/:userId', (req, res, next) => {
-    const foundUser = userArray.some(user => user.userId === req.params.userId);
+    let token = req.headers['authorization'].split(' ')[1];
+    let currentUser = userModel_1.User.GetCurrentUser(token); // returns User
+    const foundUser = userArray.some(user => user.userId === req.params.userId); // found the id?
     console.log("Found user ?", foundUser, req.params.userId);
     if (foundUser) {
-        const updatedUser = req.body;
-        // check for valid email
-        var validEmail = checkEmail(updatedUser.emailAddress);
-        if (!validEmail) {
-            return res.status(406).json({ msg: 'invalid email' });
-        }
-        userArray.forEach(user => {
-            if (user.userId == req.params.userId) {
-                user.firstName = updatedUser.firstName ? updatedUser.firstName : user.firstName;
-                user.lastName = updatedUser.lastName ? updatedUser.lastName : user.lastName;
-                user.emailAddress = updatedUser.emailAddress ? updatedUser.emailAddress : user.emailAddress;
-                user.password = updatedUser.password ? updatedUser.password : user.password;
-                // Instructor Feedback: The msg: here was not necessary and did not adhere to the specification and was not necessary.
-                var copyOfUpdatedUser = noPwdUser(user);
-                return res.status(200).json({ message: 'User updated successfully', copyOfUpdatedUser });
+        if (currentUser.userId === req.params.userId) {
+            const updatedUser = req.body;
+            var validEmail = checkEmail(updatedUser.emailAddress); // check for valid email
+            if (!validEmail) {
+                return res.status(406).json({ msg: 'invalid email' });
             }
-        });
+            userArray.forEach(user => {
+                if (user.userId == req.params.userId) {
+                    user.firstName = updatedUser.firstName ? updatedUser.firstName : user.firstName;
+                    user.lastName = updatedUser.lastName ? updatedUser.lastName : user.lastName;
+                    user.emailAddress = updatedUser.emailAddress ? updatedUser.emailAddress : user.emailAddress;
+                    user.password = updatedUser.password ? updatedUser.password : user.password;
+                    var copyOfUpdatedUser = noPwdUser(user);
+                    return res.status(200).json({ message: 'User updated successfully', copyOfUpdatedUser });
+                }
+            });
+        }
+        else {
+            return res.status(401).send({ message: 'Un-Authorized' });
+        }
     }
     else {
         return res.status(404).send({ message: 'User not Found' });

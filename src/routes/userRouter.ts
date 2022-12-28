@@ -222,6 +222,7 @@ function noPwdUser(user:User){
 // patch member by Id
 // needs auth
 userRouter.patch('/:userId', (req, res, next) => {
+
   let token = req.headers['authorization']!.split(' ')[1];
   let currentUser = User.GetCurrentUser(token); // returns User
 
@@ -235,11 +236,14 @@ userRouter.patch('/:userId', (req, res, next) => {
     {
       const updatedUser = req.body;
       
-      var validEmail:boolean = checkEmail(updatedUser.emailAddress);// check for valid email
-      
-      if(!validEmail)
+      if(updatedUser.emailAddress)
       {
-        return res.status(406).json({msg: 'invalid email'});
+        var validEmail:boolean = checkEmail(updatedUser.emailAddress);// check for valid email only if passed in
+      
+        if(!validEmail)
+        {
+          return res.status(406).json({msg: 'invalid email'});
+        }
       }
 
       userArray.forEach(user => {

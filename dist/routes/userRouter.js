@@ -186,9 +186,11 @@ userRouter.patch('/:userId', (req, res, next) => {
     if (foundUser) {
         if (currentUser.userId === req.params.userId) {
             const updatedUser = req.body;
-            var validEmail = checkEmail(updatedUser.emailAddress); // check for valid email
-            if (!validEmail) {
-                return res.status(406).json({ msg: 'invalid email' });
+            if (updatedUser.emailAddress) {
+                var validEmail = checkEmail(updatedUser.emailAddress); // check for valid email only if passed in
+                if (!validEmail) {
+                    return res.status(406).json({ msg: 'invalid email' });
+                }
             }
             userArray.forEach(user => {
                 if (user.userId == req.params.userId) {

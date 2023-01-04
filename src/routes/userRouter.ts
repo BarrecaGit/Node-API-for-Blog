@@ -9,6 +9,16 @@ let userRouter = express.Router();
 const JWTKey="6604E2F824AB70A8A67794E0F19ED171A6463046C36F0D69837121E5AEAE100E";
 let userArray: User[] = [];
 
+// test user login
+let testUser: User = {
+  userId:'mbar9478',
+  firstName: 'Mark',
+  lastName: 'Barreca',
+  emailAddress: 'barrecamark@yahoo.com',
+  password: '123password'
+}
+userArray.push(testUser);
+
 // Gets All Users 
 // needs auth
 userRouter.get('/', (req, res, next) => {

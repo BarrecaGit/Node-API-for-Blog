@@ -7,6 +7,8 @@ import { User } from '../model/userModel';
 let postRouter = express.Router();
 
 let postArray: Post[] = [];
+pushTestPosts();
+
 
 postRouter.get('/', (req, res, next) => {
   // oldest to newest
@@ -153,5 +155,50 @@ postRouter.delete('/:postId', (req, res, next) => {
   
 });
 
+
+function pushTestPosts(){
+  // push dummy posts
+  const seedArray:Post[] = [
+    {
+      postId: 0,
+      createdDate: new Date(),
+      title: "UFC'S 2022 BY THE NUMBERS",
+      content: "As the year comes to an end and we look forward to the exciting action awaiting us in 2023, let’s celebrate this incredible year by looking at a breakdown of 2022 through numbers:",
+      userId: "mbar9478",
+      headerImage: "https://dmxg5wxfqgb4u.cloudfront.net/styles/inline/s3/2022-12/GettyImages-1420572610.jpg?itok=02JwvYwA",
+      lastUpdated: new Date()
+    },
+    {
+      postId: 1,
+      createdDate: new Date(),
+      title: `GILBERT BURNS: "I'M COMING TO BRAZIL FOR A FINISH"`,
+      content: `Los Angeles — BELLATOR MMA has today announced the signing of women’s MMA pioneer and National Wrestling Hall of Fame inductee Sara McMann (13-6) to an exclusive, multi-fight contract.
+
+      McMann, 42, is a decorated grappler and wrestler who has achieved remarkable success in those disciplines and in mixed martial arts. McMann was the first woman to earn a silver medal at the Olympic Games, taking the historic honor home after the 2004 Olympics in Athens, Greece. She is a three-time FILA Wrestling World Championships medalist and earned a silver medal at the 2011 Abu Dhabi Combat Club Submission Wrestling World Championship.
+      
+      "I am thrilled to have joined BELLATOR. BELLATOR has the deepest roster at women’s featherweight, and I look forward to tough scraps with these ladies. I want to thank the BELLATOR team, especially Mike Kogan and Scott Coker, for putting together such an outstanding offer, and I’d like to thank many BELLATOR fighters, including Cris Cyborg, for their collective support and encouragement.  Everything about this feels right, and I am grateful and looking forward to 2023!"
+      
+      McMann has previously challenged for the UFC bantamweight championship, and she holds notable victories over the likes of Tonya Evinger, Shayna Baszler, Lauren Murphy, and Jessica Eye. The American was victorious in her last outing, a unanimous decision over No. 9-ranked UFC women’s bantamweight Karol Rosa in March. McMann has won five of her 13 professional victories by submission, along with one knockout win.
+      
+      McMann will compete at featherweight upon joining the BELLATOR roster, a division helmed by reigning champion Cris Cyborg and featuring such contenders as Cat Zingano, Leah McCourt, Arlene Blencowe, and Sinead Kavanagh.`,
+      userId: "mbar9478",
+      headerImage: "https://assets.bellator.com/article_bellator_s_rb0n/original-1672187921.jpg",
+      lastUpdated: new Date()
+    },
+    {
+      postId: 2,
+      createdDate: new Date(),
+      title: `BELLATOR SIGNS WMMA PIONEER, OLYMPIC WRESTLING MEDALIST SARA MCMANN TO EXCLUSIVE MULTI-FIGHT CONTRACT`,
+      content: "UFC Welterweight Gilbert Burns Is Determined To Put On The Performance Of A Lifetime In Front Of The Brazilian Faithful At UFC 283: Texeira vs Hill",
+      userId: "mbar9478",
+      headerImage: "https://dmxg5wxfqgb4u.cloudfront.net/styles/background_image_lg/s3/2022-12/123022-Gilbert-Burns-Flag-2-GettyImages-1327899403.jpg?h=d1cb525d&itok=9U0Wsph2",
+      lastUpdated: new Date()
+    }
+  ]
+
+  seedArray.forEach(post => {
+    postArray.push(post);
+  });
+}
 
 export { postRouter };

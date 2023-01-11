@@ -1,6 +1,6 @@
 import express from 'express';
 import { Post } from "../model/postModel";
-import { JWTKey } from '../routes/userRouter';
+import { JWTKey, userArray } from '../routes/userRouter';
 import jwt, { decode } from 'jsonwebtoken';
 import { User } from '../model/userModel';
 
@@ -17,45 +17,51 @@ postRouter.get('/', (req, res, next) => {
 });
 
 //Get post by postId
-postRouter.get('/:postId', (req, res, next) => {
+postRouter.get('/:postId', (req, res, next) => {  
   let postId = parseInt(req.params.postId);
   let foundPost = postArray.find(post => post.postId == postId);
-  if(foundPost){
+  if(foundPost)
+  {
     res.status(200).send(foundPost);
-  }else{
+  }
+  else
+  {
     res.status(404).send({ message: 'Post not Found' });
   }
 });
 
-//Get post by userId
-postRouter.get('/:userId', (req, res, next) => {
-  console.log(req.header)
-  let userId = req.params.userId;
-  
-  // let foundPost = postArray.find(post => post.userId == userId);
-  let foundPostArray:Post[] = []; 
-  for(let i = 0; i < postArray.length; i++){
-    let foundPost:Post | undefined = postArray.find(post => post.userId == userId);
-    if(foundPost)
-    {
-      foundPostArray.push(foundPost)
-    }
-    
-  }
-  
+//Get posts by userId
+postRouter.get('/User/:userId', (req, res, next) => {
 
-  if(foundPostArray){
-    res.status(200).send(foundPostArray);
-  }else{
-    res.status(404).send({ message: `No posts found by user ${userId}` });
+  let userId = req.params.userId;
+  userId = userId.toString();
+
+  let foundUser = userArray.find(post => post.userId == userId); // check if user exists
+  if(foundUser)
+  {
+    let foundPostArray:Post[] = postArray.filter(post => post.userId == userId);
+    if(foundPostArray)
+    {
+      return res.status(200).send(foundPostArray);
+    }
+    else
+    {
+      res.status(404).send({ message: `No posts found by user ${userId}` });
+    }
   }
+  else
+  {
+    return res.status(404).send({ message: `User not found: ${userId}` });
+  }
+  
 });
 
 // Post a post
 // needs auth
 postRouter.post('/', (req, res, next) => {
 
-    if(!req.body.title || !req.body.content ){
+    if(!req.body.title || !req.body.content )
+    {
       return res.send({ msg: 'Please add a title and content'});
     }
     
@@ -78,7 +84,8 @@ postRouter.post('/', (req, res, next) => {
     return res.status(201).json(newPost);
 });
 
-function getPostId(){
+function getPostId()
+{
   // get size of array
   let arraySize = postArray.length;
   let newId = arraySize + 1;

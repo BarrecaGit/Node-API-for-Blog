@@ -235,10 +235,10 @@
                 }
             }
         },
-        "/Posts/{userId}": {
+        "/Posts/User/{userId}": {
             "get":{
                 "tags":["Posts"],
-                "description": "Returns a post",
+                "description": "Returns a post array",
                 "parameters":[
                     {
                       "name": "userId",

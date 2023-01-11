@@ -277,4 +277,4 @@ userRouter.patch('/:userId', (req, res, next) => {
 
 
 
-export { userRouter,JWTKey };
+export { userRouter, JWTKey, userArray };

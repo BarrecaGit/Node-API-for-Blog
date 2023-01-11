@@ -7,7 +7,7 @@ import { User } from '../model/userModel';
 let postRouter = express.Router();
 
 let postArray: Post[] = [];
-pushTestPosts();
+// pushTestPosts();
 
 
 postRouter.get('/', (req, res, next) => {
@@ -62,7 +62,7 @@ postRouter.post('/', (req, res, next) => {
     let token = req.headers['authorization']!.split(' ')[1];
     
     let decoded = jwt.verify(token, JWTKey) as any;
-    console.log(decoded.data.userId)
+    //console.log(decoded.data.userId)
     
 
     var newPost:Post={
@@ -105,6 +105,7 @@ postRouter.patch('/:postId', (req, res, next) => {
           {
             if(currentUser.userId === post.userId)
             {
+              post.title = updatedPost.title ? updatedPost.title : post.title;
               post.content = updatedPost.content ? updatedPost.content : post.content;
               post.headerImage = updatedPost.headerImage ? updatedPost.headerImage : post.headerImage;
               post.lastUpdated = new Date();
@@ -131,15 +132,20 @@ postRouter.patch('/:postId', (req, res, next) => {
 // Delete post by postId
 // needs auth
 postRouter.delete('/:postId', (req, res, next) => {
-  
+
   let token = req.headers['authorization']!.split(' ')[1];
+
+  if(token){console.log('we have token', token)} else {console.log('No token')}
+  
   let currentUser = User.GetCurrentUser(token); 
 
   const found = postArray.some(p => p.postId === parseInt(req.params.postId));
   const foundPost = postArray.find(j => j.postId === parseInt(req.params.postId));
+
   if(found)
   {
-    if(currentUser.userId === foundPost?.userId){
+    if(currentUser.userId === foundPost?.userId)
+    {
       postArray = postArray.filter(j => j.postId !== parseInt(req.params.postId));
       return res.status(204).json({postArray});
     }

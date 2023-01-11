@@ -9,16 +9,6 @@ let userRouter = express.Router();
 const JWTKey="6604E2F824AB70A8A67794E0F19ED171A6463046C36F0D69837121E5AEAE100E";
 let userArray: User[] = [];
 
-// test user login
-let testUser: User = {
-  userId:'mbar9478',
-  firstName: 'Mark',
-  lastName: 'Barreca',
-  emailAddress: 'barrecamark@yahoo.com',
-  password: '123password'
-}
-userArray.push(testUser);
-
 // Gets All Users 
 // needs auth
 userRouter.get('/', (req, res, next) => {
@@ -35,10 +25,12 @@ userRouter.get('/', (req, res, next) => {
 userRouter.get('/Login/:us/:pwd', (req, res, next) => {
         
     let person = userArray.find(u => u.userId === req.params.us);
-    
-    if(person){
-        bcrypt.compare(req.params.pwd,person?.password!, (err,result)=>{
-       
+    //console.log(person);
+    if(person)
+    {
+        bcrypt.compare(req.params.pwd, person?.password!, (err,result)=>{
+        //console.log(req.params.pwd);
+        //console.log(person?.password!);
         if(result) 
         {
           let token = jwt.sign({
@@ -75,7 +67,8 @@ userRouter.get('/:userId', (req, res, next) => {
 
   let foundUser = userArray.find(user => user.userId == userId.toString());
 
-  if (foundUser) {
+  if (foundUser)
+  {
     var copyOffoundUser:User = {
       userId: foundUser.userId,
       firstName: foundUser.firstName,
@@ -84,7 +77,8 @@ userRouter.get('/:userId', (req, res, next) => {
     };
       res.send(copyOffoundUser);
   }
-  else {
+  else 
+  {
       res.status(404).send({ message: 'User not Found' });
   }
 });
@@ -141,9 +135,12 @@ userRouter.post('/', (req, res, next) => {
       
     
     // if not empty, trim input
-    if(!isEmpty){
+    if(!isEmpty)
+    {
       newUser = trimFields(newUser) 
-    }else{
+    }
+    else
+    {
       return res.status(406).json({ msg: 'All properties are required in the user object (userId, firstName, lastName, emailAddress, password)'});
     }
     
@@ -151,14 +148,11 @@ userRouter.post('/', (req, res, next) => {
     var userIdTaken:boolean = false;
 
     userArray.forEach(j => {
-        
-        if(j.userId == newUser.userId) {
-          
+        if(j.userId == newUser.userId) 
+        {
           userIdTaken = true;
-          return res.status(409).json({ msg: 'Conflict userId already in use'});
-              
-        }   
-        
+          return res.status(409).json({ msg: 'Conflict userId already in use'});     
+        }
     });
 
     // check for valid email
@@ -173,7 +167,6 @@ userRouter.post('/', (req, res, next) => {
         bcrypt.hash(newUser.password!, salt, function(err, hash){
           newUser.password = hash;
           userArray.push(newUser);
-          // console.log("2nd attempt: ",userArray)
         })
       })
       // respond with copy of the newUser object without the password
@@ -198,7 +191,8 @@ function checkEmail(emailAddress:string){
 function checkEmpties(user:User){
   let isEmpty = false;
   // checks for empties
-  if(user.userId.trim().length === 0 || user.firstName.trim().length === 0 || user.lastName.trim().length === 0 || user.emailAddress.trim().length === 0 || user.password?.trim().length === 0){
+  if(user.userId.trim().length === 0 || user.firstName.trim().length === 0 || user.lastName.trim().length === 0 || user.emailAddress.trim().length === 0 || user.password?.trim().length === 0)
+  {
     return isEmpty = true;
   }
 }

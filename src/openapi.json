@@ -2,7 +2,7 @@
     "openapi": "3.0.1",
     "info": {
       "title": "Blog backend CRUD documentation",
-      "description": "This is a basic user API it allows you create, retrieve update and delete users from an in memmory array written in node / express",
+      "description": "This is a user and post API it allows you create, retrieve update and delete users from an in memory array written in node / express",
       "contact": {
         "email": "n01470339@unf.edu"
       },
@@ -23,7 +23,7 @@
                 "description":"Returns all posts",
                 "responses":{
                     "200":{
-                        "description": "Returns a list of posts that are currently in the in memmory array",
+                        "description": "Returns a list of posts that are currently in the in memory array",
                         "content":{
                             "application/json": {
                               "schema": {
@@ -283,7 +283,7 @@
         }
         ],
         "tags":["Users"],
-        "description": "Returns a list of users that are currently in the in memmory array",
+        "description": "Returns a list of users that are currently in the in memory array",
           "responses": {
             "200": {
               "description": "Array of Users",

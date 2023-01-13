@@ -11,4 +11,7 @@ npm run dev
 ```
 
 
-This is a Nodejs server with Express and listens on port 3000
+This is a RESTful Nodejs api written with Express and listens on port 3000
+
+
+![localhost_3000_](https://user-images.githubusercontent.com/49402235/212351326-322458e1-0cbe-438f-aff2-a81073911617.png)

@@ -633,7 +633,7 @@
         "PostResponse": {
           "properties": {
            "postId": {
-              "type": "integer"
+              "type": "string"
             },
             "createdDate": {
               "type": "string"

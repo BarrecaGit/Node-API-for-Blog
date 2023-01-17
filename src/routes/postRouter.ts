@@ -18,7 +18,7 @@ postRouter.get('/', (req, res, next) => {
 
 //Get post by postId
 postRouter.get('/:postId', (req, res, next) => {  
-  let postId = parseInt(req.params.postId);
+  let postId = String(req.params.postId);
   let foundPost = postArray.find(post => post.postId == postId);
   if(foundPost)
   {
@@ -86,10 +86,24 @@ postRouter.post('/', (req, res, next) => {
 
 function getPostId()
 {
-  // get size of array
-  let arraySize = postArray.length;
-  let newId = arraySize + 1;
-  return newId; 
+  var timeStamp = new Date().getTime();
+  var microStamp = ((typeof performance !== 'undefined') && performance.now && (performance.now()*1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
+  
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16;//random number between 0 and 16
+      if(timeStamp > 0)//Use timestamp until depleted
+      {
+          r = (timeStamp + r)%16 | 0;
+          timeStamp = Math.floor(timeStamp/16);
+      }
+      else //Use microseconds since page-load if supported
+      {
+          r = (microStamp + r)%16 | 0;
+          microStamp = Math.floor(microStamp/16);
+      }
+      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+
 }
 
 
@@ -102,13 +116,13 @@ postRouter.patch('/:postId', (req, res, next) => {
   let currentUser = User.GetCurrentUser(token); // returns User
 
   // find the post by postId and compare the userId
-  const foundPost = postArray.some(p => p.postId === parseInt(req.params.postId));
+  const foundPost = postArray.some(p => p.postId === String(req.params.postId));
 
   if(foundPost) 
   {
       const updatedPost = req.body;
       postArray.forEach(post => {
-          if(post.postId == parseInt(req.params.postId))
+          if(post.postId == String(req.params.postId))
           {
             if(currentUser.userId === post.userId)
             {
@@ -140,20 +154,18 @@ postRouter.patch('/:postId', (req, res, next) => {
 // needs auth
 postRouter.delete('/:postId', (req, res, next) => {
 
+  // if the current users userId doesn't match the userId passed in, can't continue
   let token = req.headers['authorization']!.split(' ')[1];
+  let currentUser = User.GetCurrentUser(token); // returns User
 
-  if(token){console.log('we have token', token)} else {console.log('No token')}
-  
-  let currentUser = User.GetCurrentUser(token); 
-
-  const found = postArray.some(p => p.postId === parseInt(req.params.postId));
-  const foundPost = postArray.find(j => j.postId === parseInt(req.params.postId));
+  const found:boolean = postArray.some(p => p.postId === String(req.params.postId));
+  const foundPost:Post | undefined = postArray.find(j => j.postId === String(req.params.postId));
 
   if(found)
   {
     if(currentUser.userId === foundPost?.userId)
     {
-      postArray = postArray.filter(j => j.postId !== parseInt(req.params.postId));
+      postArray = postArray.filter(j => j.postId !== String(req.params.postId));
       return res.status(204).json({postArray});
     }
     else
@@ -173,7 +185,7 @@ function pushTestPosts(){
   // push dummy posts
   const seedArray:Post[] = [
     {
-      postId: 0,
+      postId: '0',
       createdDate: new Date(),
       title: "UFC'S 2022 BY THE NUMBERS",
       content: "As the year comes to an end and we look forward to the exciting action awaiting us in 2023, let’s celebrate this incredible year by looking at a breakdown of 2022 through numbers:",
@@ -182,7 +194,7 @@ function pushTestPosts(){
       lastUpdated: new Date()
     },
     {
-      postId: 1,
+      postId: '1',
       createdDate: new Date(),
       title: `GILBERT BURNS: "I'M COMING TO BRAZIL FOR A FINISH"`,
       content: `Los Angeles — BELLATOR MMA has today announced the signing of women’s MMA pioneer and National Wrestling Hall of Fame inductee Sara McMann (13-6) to an exclusive, multi-fight contract.
@@ -199,7 +211,7 @@ function pushTestPosts(){
       lastUpdated: new Date()
     },
     {
-      postId: 2,
+      postId: '2',
       createdDate: new Date(),
       title: `BELLATOR SIGNS WMMA PIONEER, OLYMPIC WRESTLING MEDALIST SARA MCMANN TO EXCLUSIVE MULTI-FIGHT CONTRACT`,
       content: "UFC Welterweight Gilbert Burns Is Determined To Put On The Performance Of A Lifetime In Front Of The Brazilian Faithful At UFC 283: Texeira vs Hill",

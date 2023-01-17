@@ -2,7 +2,7 @@ import { postRouter } from "../routes/postRouter";
 
 export class Post
 {
-    postId:number = 0;
+    postId:string = '';
     createdDate:Date = new Date();
     title:string = ''; 
     content:string = ''; 
@@ -11,7 +11,7 @@ export class Post
     lastUpdated:Date = new Date();
 
     
-    constructor(postId:number,createdDate:Date,title:string,content:string,userId:string,headerImage:string,lastUpdated:Date) 
+    constructor(postId:string,createdDate:Date,title:string,content:string,userId:string,headerImage:string,lastUpdated:Date) 
     {
         this.postId = postId;
         this.createdDate = createdDate;
